@@ -1,0 +1,19 @@
+{
+    "name": "fallou/maxitsa",
+    "description": "Projet PHP MVC avec Composer",
+    "autoload": {
+        "psr-4": {
+            "Maxitsa\\Core\\": "core/",
+            "Maxitsa\\App\\": "app/",
+            "Maxitsa\\Middleware\\": "middlewares/",
+            "Maxitsa\\Abstract\\": "abstract/",
+            "Maxitsa\\Controller\\": "src/controller/",
+            "Maxitsa\\Entity\\": "src/entity/",
+            "Maxitsa\\Repository\\": "src/repository/",
+            "Maxitsa\\Service\\": "src/service/"
+        }
+    },
+    "require": {
+        "vlucas/phpdotenv": "^5.5"
+    }
+}
