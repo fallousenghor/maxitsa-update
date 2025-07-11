@@ -1,17 +1,25 @@
 <?php
+namespace Maxitsa\Repository;
 use Maxitsa\Abstract\AbstractRepository;
-require_once __DIR__ . '/../../core/App.php';
-
-
-if (!class_exists('App') && class_exists('App', false) === false) {
-    class_alias('App', 'App');
-}
-
-
+use Maxitsa\Core\App;
+use PDO;
+require_once dirname(__DIR__,2) . '/app/core/App.php';
 
 class PersonneRepository extends AbstractRepository {
+    private static ?PersonneRepository $instance = null;
+
+    private function __construct() {
+      
+    }
+
+    public static function getInstance(): PersonneRepository {
+        if (self::$instance === null) {
+            self::$instance = new self();
+        }
+        return self::$instance;
+    }
     public function insert($entity = null) {
-        $db = \App::getDependency('core', 'Database')->getConnection();
+        $db = App::getDependency('core', 'Database')->getConnection();
         $stmt = $db->prepare("INSERT INTO personne (id, telephone, password, num_identite, photo_recto, photo_verso, prenom, nom, adresse, type_personne) VALUES (:id, :telephone, :password, :num_identite, :photo_recto, :photo_verso, :prenom, :nom, :adresse, :type_personne)");
         return $stmt->execute([
             'id' => $entity->id,
@@ -23,16 +31,15 @@ class PersonneRepository extends AbstractRepository {
             'prenom' => $entity->prenom,
             'nom' => $entity->nom,
             'adresse' => $entity->adresse,
-            'type_personne' => $entity->typePersonne?->value ?? null
+            'type_personne' => $entity->typePersonne ?? 'client'
         ]);
     }
 
     public function findByTelephone($telephone) {
-        $db = \App::getDependency('core', 'Database')->getConnection();
+        $db = App::getDependency('core', 'Database')->getConnection();
         $stmt = $db->prepare("SELECT * FROM personne WHERE telephone = :telephone");
         $stmt->execute(['telephone' => $telephone]);
-        $stmt->setFetchMode(PDO::FETCH_CLASS, 'Personne');
-        return $stmt->fetch();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
     public function update(){}
 }

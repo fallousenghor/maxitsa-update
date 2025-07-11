@@ -13,6 +13,10 @@ class ComposerStaticInitd8f97406c9b9339a96e72870b8d9f38e
     );
 
     public static $prefixLengthsPsr4 = array (
+        'T' => 
+        array (
+            'Twilio\\' => 7,
+        ),
         'S' => 
         array (
             'Symfony\\Polyfill\\Php80\\' => 23,
@@ -28,9 +32,11 @@ class ComposerStaticInitd8f97406c9b9339a96e72870b8d9f38e
             'Maxitsa\\Service\\' => 16,
             'Maxitsa\\Repository\\' => 19,
             'Maxitsa\\Middleware\\' => 19,
+            'Maxitsa\\Enum\\' => 13,
             'Maxitsa\\Entity\\' => 15,
             'Maxitsa\\Core\\' => 13,
             'Maxitsa\\Controller\\' => 19,
+            'Maxitsa\\Config\\' => 15,
             'Maxitsa\\App\\' => 12,
             'Maxitsa\\Abstract\\' => 17,
         ),
@@ -45,6 +51,10 @@ class ComposerStaticInitd8f97406c9b9339a96e72870b8d9f38e
     );
 
     public static $prefixDirsPsr4 = array (
+        'Twilio\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/twilio/sdk/src/Twilio',
+        ),
         'Symfony\\Polyfill\\Php80\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-php80',
@@ -73,17 +83,25 @@ class ComposerStaticInitd8f97406c9b9339a96e72870b8d9f38e
         array (
             0 => __DIR__ . '/../..' . '/middlewares',
         ),
+        'Maxitsa\\Enum\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src/enums',
+        ),
         'Maxitsa\\Entity\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src/entity',
         ),
         'Maxitsa\\Core\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/core',
+            0 => __DIR__ . '/../..' . '/app/core',
         ),
         'Maxitsa\\Controller\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src/controller',
+        ),
+        'Maxitsa\\Config\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/app/config',
         ),
         'Maxitsa\\App\\' => 
         array (
@@ -91,7 +109,7 @@ class ComposerStaticInitd8f97406c9b9339a96e72870b8d9f38e
         ),
         'Maxitsa\\Abstract\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/abstract',
+            0 => __DIR__ . '/../..' . '/app/core/abstract',
         ),
         'GrahamCampbell\\ResultType\\' => 
         array (

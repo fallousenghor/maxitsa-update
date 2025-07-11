@@ -1,4 +1,5 @@
 <?php
+namespace Maxitsa\Entity;
 
 use Maxitsa\Abstract\AbstractEntity;
 
@@ -6,9 +7,9 @@ class Compte extends AbstractEntity {
     private string $id;
     private string $telephone;
     private float $solde;
-    private $personne; // Personne
+    private $personne; 
     private array $transactions = [];
-    private $typeCompte; // string
+    private $typeCompte; 
 
     public function getId() { return $this->id; }
     public function setId($id) { $this->id = $id; }

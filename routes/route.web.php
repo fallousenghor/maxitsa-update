@@ -1,7 +1,11 @@
 <?php
 
+
+
 use Maxitsa\Controller\HomeController;
 use Maxitsa\Controller\UserController;
+
+
 
 
 
@@ -12,6 +16,7 @@ return [
         '/signup' => [UserController::class, 'signup'],
         '/login' => [UserController::class, 'login'],
         '/accueil' => [HomeController::class, 'index'],
+        '/transactions' => [HomeController::class, 'transactions'],
     ],
     'POST' => [
         '/signin' => [UserController::class, 'signin'],

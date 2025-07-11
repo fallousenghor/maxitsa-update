@@ -1,19 +1,19 @@
 <?php return array(
     'root' => array(
-        'name' => 'fallou/mon-projet',
-        'pretty_version' => '1.0.0+no-version-set',
-        'version' => '1.0.0.0',
-        'reference' => null,
+        'name' => 'fallou/maxitsa',
+        'pretty_version' => 'dev-main',
+        'version' => 'dev-main',
+        'reference' => '4502af05667969f8d4cdb74ae35849c0a1142f4c',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
         'dev' => true,
     ),
     'versions' => array(
-        'fallou/mon-projet' => array(
-            'pretty_version' => '1.0.0+no-version-set',
-            'version' => '1.0.0.0',
-            'reference' => null,
+        'fallou/maxitsa' => array(
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
+            'reference' => '4502af05667969f8d4cdb74ae35849c0a1142f4c',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -61,6 +61,15 @@
             'reference' => '0cc9dd0f17f61d8131e7df6b84bd344899fe2608',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/polyfill-php80',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'twilio/sdk' => array(
+            'pretty_version' => '8.6.5',
+            'version' => '8.6.5.0',
+            'reference' => '4a914d4fcbab9ee6b7ea84f8df171022f208fdf5',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../twilio/sdk',
             'aliases' => array(),
             'dev_requirement' => false,
         ),
