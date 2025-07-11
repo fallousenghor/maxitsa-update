@@ -1,6 +1,7 @@
 <?php
 namespace Maxitsa\Service;
 use Maxista\Enum\TypePersonne;
+use Maxitsa\Core\App;
 use Maxitsa\Repository\PersonneRepository;
 use Maxitsa\Entity\Personne;
 use Maxitsa\Core\TwilioService;
@@ -23,7 +24,7 @@ class PersonneService {
         return self::$instance;
     }
     public function inscrire(array $data): bool {
-        $db = \Maxitsa\Core\App::getDependency('core', 'Database')->getConnection();
+        $db =App::getDependency('core', 'Database')->getConnection();
         try {
             $db->beginTransaction();
 
@@ -50,14 +51,14 @@ class PersonneService {
                     'personne' => $personne,
                     'type_compte' => 'principal'
                 ];
-                $compteService = \Maxitsa\Service\CompteService::getInstance();
+                $compteService = CompteService::getInstance();
                 $okCompte = $compteService->creerCompte($compteData);
                 if ($okCompte) {
                     
                     try {
-                        $twilio = new Maxitsa\Core\TwilioService();
+                       
                         $message = "Bienvenue sur Maxitsa, ".$personne->prenom."! Votre inscription est confirmée.";
-                        $twilio->sendSms($personne->telephone, $message);
+                      
                     } catch (\Exception $e) {
                        
                         error_log('Erreur Twilio: ' . $e->getMessage());

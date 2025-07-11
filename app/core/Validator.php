@@ -1,41 +1,16 @@
 <?php
 namespace Maxitsa\Core;
+
+use Maxitsa\Enum\ErrorMessage;
 class Validator {
     
 
     public static function getErrorMessages() {
-        return [
-           
-            'prenom' => 'Le prénom est requis.',
-            'nom' => 'Le nom est requis.',
-            'telephone' => 'Le téléphone est requis.',
-            'adresse' => "L'adresse est requise.",
-            'num_identite' => "Le numéro d'identité est requis.",
-            'password' => 'Le mot de passe est requis.',
-            'password_confirm' => 'Les mots de passe ne correspondent pas.',
-
-           
-            'login_invalid' => 'Identifiants invalides.',
-            'signup_error' => "Erreur lors de l'inscription.",
-            'account_create_error' => "Erreur lors de la création du compte.",
-
-            'upload' => "Erreur lors de l'upload des fichiers.",
-
-          
-            'transaction_error' => "Erreur lors de la transaction.",
-            'solde_insuffisant' => "Solde insuffisant.",
-            'transaction_success' => "Transaction effectuée avec succès.",
-
-          
-            'telephone_format' => 'Le numéro de téléphone doit etre un numero orange.',
-            'telephone_unique' => 'Ce numéro de téléphone existe déjà.',
-            'identite_format' => "Le numéro d'identité n'est pas valide.",
-            'identite_unique' => "Ce numéro d'identité existe déjà.",
-
-           
-            'field_required' => "Ce champ est requis.",
-            'unknown_error' => "Une erreur inconnue est survenue."
-        ];
+        $messages = [];
+        foreach (ErrorMessage::cases() as $case) {
+            $messages[$case->name] = $case->value;
+        }
+        return $messages;
     }
 
     public static function getErrorMessage($key) {

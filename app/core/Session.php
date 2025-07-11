@@ -3,38 +3,9 @@ namespace Maxitsa\Core;
 class Session
 {
    
-    public static function getErrorMessages() {
-        return [
-           
-            'prenom' => 'Le prénom est requis.',
-            'nom' => 'Le nom est requis.',
-            'telephone' => 'Le téléphone est requis.',
-            'adresse' => "L'adresse est requise.",
-            'num_identite' => "Le numéro d'identité est requis.",
-            'password' => 'Le mot de passe est requis.',
-            'password_confirm' => 'Les mots de passe ne correspondent pas.',
-
-           
-            'login_invalid' => 'Identifiants invalides.',
-            'signup_error' => "Erreur lors de l'inscription.",
-            'account_create_error' => "Erreur lors de la création du compte.",
-
-            
-            'upload' => "Erreur lors de l'upload des fichiers.",
-
-           
-            'transaction_error' => "Erreur lors de la transaction.",
-            'solde_insuffisant' => "Solde insuffisant.",
-            'transaction_success' => "Transaction effectuée avec succès.",
-
-          
-            'field_required' => "Ce champ est requis.",
-            'unknown_error' => "Une erreur inconnue est survenue."
-        ];
-    }
-
+    
     public static function getErrorMessage($key) {
-        $messages = self::getErrorMessages();
+        $messages = Validator::getErrorMessages();
         return isset($messages[$key]) ? $messages[$key] : '';
     }
 

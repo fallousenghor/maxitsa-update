@@ -1,11 +1,15 @@
 <?php
 namespace Maxitsa\Core;
 
+use Maxitsa\Controller\ErrorController;
+
+
+
 class Router
 {
     private array $routes;
 
-    public function __construct()
+    public function __construct() 
     {
         $this->routes = require dirname( __DIR__,2 ). '/routes/route.web.php';
     }
@@ -18,7 +22,20 @@ class Router
         $routes = $this->routes[$method] ?? [];
 
         if (isset($routes[$path])) {
-            [$controllerClass, $methodName] = $routes[$path];
+            $route = $routes[$path];
+            $controllerClass = $route[0];
+            $methodName = $route[1];
+            $middlewares = $route['middlewares'] ?? [];
+
+            
+            if (!empty($middlewares)) {
+                require_once __DIR__ . '/../config/middlewares.php';
+                foreach ($middlewares as $middleware) {
+                    if (is_callable($middleware)) {
+                        $middleware();
+                    }
+                }
+            }
 
             if (class_exists($controllerClass) && method_exists($controllerClass, $methodName)) {
                 $controller = new $controllerClass();
@@ -29,7 +46,7 @@ class Router
             }
         } else {
             http_response_code(404);
-            echo "Page non trouvée.";
+            require_once  __DIR__ . '/../../templates/404error.web.php';
         }
     }
 }
