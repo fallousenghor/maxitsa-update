@@ -6,6 +6,7 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Twilio\\' => array($vendorDir . '/twilio/sdk/src/Twilio'),
     'Symfony\\Polyfill\\Php80\\' => array($vendorDir . '/symfony/polyfill-php80'),
     'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
     'Symfony\\Polyfill\\Ctype\\' => array($vendorDir . '/symfony/polyfill-ctype'),
@@ -13,11 +14,13 @@ return array(
     'Maxitsa\\Service\\' => array($baseDir . '/src/service'),
     'Maxitsa\\Repository\\' => array($baseDir . '/src/repository'),
     'Maxitsa\\Middleware\\' => array($baseDir . '/middlewares'),
+    'Maxitsa\\Enum\\' => array($baseDir . '/src/enums'),
     'Maxitsa\\Entity\\' => array($baseDir . '/src/entity'),
-    'Maxitsa\\Core\\' => array($baseDir . '/core'),
+    'Maxitsa\\Core\\' => array($baseDir . '/app/core'),
     'Maxitsa\\Controller\\' => array($baseDir . '/src/controller'),
+    'Maxitsa\\Config\\' => array($baseDir . '/app/config'),
     'Maxitsa\\App\\' => array($baseDir . '/app'),
-    'Maxitsa\\Abstract\\' => array($baseDir . '/abstract'),
+    'Maxitsa\\Abstract\\' => array($baseDir . '/app/core/abstract'),
     'GrahamCampbell\\ResultType\\' => array($vendorDir . '/graham-campbell/result-type/src'),
     'Dotenv\\' => array($vendorDir . '/vlucas/phpdotenv/src'),
 );

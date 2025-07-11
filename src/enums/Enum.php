@@ -1,4 +1,5 @@
 <?php
+namespace Maxista\Enum;
 enum TypePersonne: string {
     case CLIENT = 'client';
     case COMMERCIAL = 'commercial';

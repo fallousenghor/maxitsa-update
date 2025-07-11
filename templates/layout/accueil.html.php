@@ -20,6 +20,7 @@
             </div>
             
             <div class="flex items-center space-x-4">
+               
                 <button class="btn-shine bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-6 py-2 rounded-lg font-medium transition-all duration-300 backdrop-blur-sm">
                     Ajouter compte
                 </button>
@@ -29,6 +30,12 @@
                 <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center cursor-pointer hover:bg-opacity-30 transition-all duration-300">
                     <i class="fas fa-user text-white text-lg"></i>
                 </div>
+                 <span class="text-white font-bold"> <?php echo htmlspecialchars($user_telephone ?? ''); ?></span>
+                <a href="http://localhost:8082/login">
+                     <button class="btn-shine bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-6 py-2 rounded-lg font-medium transition-all duration-300 backdrop-blur-sm">
+                    Deconnexion
+                </button>
+                </a>
             </div>
         </div>
     </header>
@@ -41,13 +48,23 @@
             <div class="card-hover gradient-bg rounded-2xl p-8 text-white shadow-xl">
                 <div class="flex items-center justify-between mb-6">
                     <h2 class="text-2xl font-bold">Solde :</h2>
-                    <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                    <div id="toggle-solde" class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center cursor-pointer">
                         <i class="fas fa-eye text-2xl"></i>
                     </div>
                 </div>
                 <div class="text-right">
-                    <p class="text-3xl font-black">••••••</p>
-                    <p class="text-sm opacity-80 mt-2">Cliquez pour afficher</p>
+                    <p id="solde-value" class="text-3xl font-black">
+                        <?php 
+                        if (isset($message) && $message) {
+                            echo htmlspecialchars($message);
+                        } elseif (isset($user_solde)) {
+                            echo '••••••';
+                        } else {
+                            echo 'N/A';
+                        }
+                        ?>
+                    </p>
+                    <p id="solde-label" class="text-sm opacity-80 mt-2">Cliquez sur l'œil pour afficher</p>
                 </div>
             </div>
 
@@ -84,20 +101,22 @@
             </div>
 
             <!-- Derniers Transactions Card -->
-            <div class="card-hover gradient-bg rounded-2xl p-8 text-white shadow-xl cursor-pointer md:col-span-2 lg:col-span-1">
-                <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-2xl font-bold">derniers transactions</h2>
-                    <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-                        <i class="fas fa-history text-2xl"></i>
+            <a href="/transactions" style="text-decoration: none;">
+                <div class="card-hover gradient-bg rounded-2xl p-8 text-white shadow-xl cursor-pointer md:col-span-2 lg:col-span-1">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-2xl font-bold">derniers transactions</h2>
+                        <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                            <i class="fas fa-history text-2xl"></i>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="inline-flex items-center space-x-2 bg-white bg-opacity-20 px-4 py-2 rounded-lg">
+                            <i class="fas fa-list"></i>
+                            <span class="font-medium">Voir tout</span>
+                        </div>
                     </div>
                 </div>
-                <div class="text-right">
-                    <div class="inline-flex items-center space-x-2 bg-white bg-opacity-20 px-4 py-2 rounded-lg">
-                        <i class="fas fa-list"></i>
-                        <span class="font-medium">Voir tout</span>
-                    </div>
-                </div>
-            </div>
+            </a>
         </div>
 
         
@@ -106,19 +125,25 @@
   
 
     <script>
-     
-
-       
-        document.querySelector('.card-hover:first-child').addEventListener('click', function() {
-            const balanceText = this.querySelector('p.text-3xl');
-            if (balanceText.textContent === '••••••') {
-                balanceText.textContent = '15,247.83 €';
-                this.querySelector('p.text-sm').textContent = 'Cliquez pour masquer';
-            } else {
-                balanceText.textContent = '••••••';
-                this.querySelector('p.text-sm').textContent = 'Cliquez pour afficher';
-            }
-        });
+        // Affichage/Masquage du solde
+        const toggleBtn = document.getElementById('toggle-solde');
+        const soldeValue = document.getElementById('solde-value');
+        const soldeLabel = document.getElementById('solde-label');
+        // Valeur réelle du solde côté PHP
+        const realSolde = <?php echo isset($user_solde) ? json_encode($user_solde . ' F CFA') : 'null'; ?>;
+        let visible = false;
+        if (toggleBtn && soldeValue && realSolde !== null) {
+            toggleBtn.addEventListener('click', function() {
+                visible = !visible;
+                if (visible) {
+                    soldeValue.textContent = realSolde;
+                    soldeLabel.textContent = 'Cliquez pour masquer';
+                } else {
+                    soldeValue.textContent = '••••••';
+                    soldeLabel.textContent = 'Cliquez sur l\'œil pour afficher';
+                }
+            });
+        }
     </script>
 </body>
 </html>

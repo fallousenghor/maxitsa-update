@@ -5,6 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Créer un Compte</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    // Affiche le nom du fichier sélectionné sur le bouton
+    function handleFileUpload(input, labelId) {
+        if (input.files && input.files[0]) {
+            document.getElementById(labelId).querySelector('span').textContent = input.files[0].name;
+        } else {
+            document.getElementById(labelId).querySelector('span').textContent = 'Télécharger';
+        }
+    }
+    </script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
    
 </head>
@@ -22,7 +32,15 @@
     <!-- Contenu principal -->
     <div class="max-w-4xl mx-auto px-6 pb-12">
         <div class="card-container rounded-3xl p-8 md:p-12 slide-in">
-            <form class="space-y-8" method="post" action="/signup">
+            <form class="space-y-8" method="post" action="/signup" enctype="multipart/form-data">
+                <?php
+                use Maxitsa\Core\Session;
+                $session = Session::getInstance();
+                $errors = $session->get('errors') ?? [];
+                $old = $session->get('old') ?? [];
+                $session->unset('errors');
+                $session->unset('old');
+                ?>
                 <!-- Section 1: Informations personnelles -->
                 <div class="form-section">
                     <h3 class="text-xl font-semibold text-gray-800 mb-6 flex items-center">
@@ -43,8 +61,13 @@
                                 name="prenom"
                                 placeholder="Entrez votre prénom" 
                                 class="input-modern w-full px-4 py-4 rounded-xl focus:outline-none text-gray-800 font-medium"
-                                required
+                                value="<?= htmlspecialchars($old['prenom'] ?? '') ?>"
                             >
+                            <?php if (!empty($errors['prenom'])): ?>
+                                <div class="text-red-500 text-sm mt-1">
+                                    <?= implode('<br>', $errors['prenom']) ?>
+                                </div>
+                            <?php endif; ?>
                         </div>
                         <div class="space-y-2">
                             <label class="text-sm font-medium text-gray-700 flex items-center">
@@ -57,8 +80,13 @@
                                 name="nom"
                                 placeholder="Entrez votre nom" 
                                 class="input-modern w-full px-4 py-4 rounded-xl focus:outline-none text-gray-800 font-medium"
-                                required
+                                value="<?= htmlspecialchars($old['nom'] ?? '') ?>"
                             >
+                            <?php if (!empty($errors['nom'])): ?>
+                                <div class="text-red-500 text-sm mt-1">
+                                    <?= implode('<br>', $errors['nom']) ?>
+                                </div>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
@@ -83,8 +111,13 @@
                                 name="telephone"
                                 placeholder="+221 XX XXX XX XX" 
                                 class="input-modern w-full px-4 py-4 rounded-xl focus:outline-none text-gray-800 font-medium"
-                                required
+                                value="<?= htmlspecialchars($old['telephone'] ?? '') ?>"
                             >
+                            <?php if (!empty($errors['telephone'])): ?>
+                                <div class="text-red-500 text-sm mt-1">
+                                    <?= implode('<br>', $errors['telephone']) ?>
+                                </div>
+                            <?php endif; ?>
                         </div>
                         <div class="space-y-2">
                             <label class="text-sm font-medium text-gray-700 flex items-center">
@@ -97,8 +130,13 @@
                                 name="adresse"
                                 placeholder="Votre adresse complète" 
                                 class="input-modern w-full px-4 py-4 rounded-xl focus:outline-none text-gray-800 font-medium"
-                                required
+                                value="<?= htmlspecialchars($old['adresse'] ?? '') ?>"
                             >
+                            <?php if (!empty($errors['adresse'])): ?>
+                                <div class="text-red-500 text-sm mt-1">
+                                    <?= implode('<br>', $errors['adresse']) ?>
+                                </div>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
@@ -123,8 +161,13 @@
                                 name="num_identite"
                                 placeholder="Votre numéro CNI" 
                                 class="input-modern w-full px-4 py-4 rounded-xl focus:outline-none text-gray-800 font-medium"
-                                required
+                                value="<?= htmlspecialchars($old['num_identite'] ?? '') ?>"
                             >
+                            <?php if (!empty($errors['num_identite'])): ?>
+                                <div class="text-red-500 text-sm mt-1">
+                                    <?= implode('<br>', $errors['num_identite']) ?>
+                                </div>
+                            <?php endif; ?>
                         </div>
                         <div class="space-y-2">
                             <label class="text-sm font-medium text-gray-700 flex items-center">
@@ -184,9 +227,13 @@
                                     name="password"
                                     placeholder="Créez un mot de passe sécurisé" 
                                     class="input-modern w-full px-4 py-4 pr-12 rounded-xl focus:outline-none text-gray-800 font-medium"
-                                    required
                                     aria-required="true"
                                 >
+                                <?php if (!empty($errors['password'])): ?>
+                                    <div class="text-red-500 text-sm mt-1">
+                                        <?= implode('<br>', $errors['password']) ?>
+                                    </div>
+                                <?php endif; ?>
                                 <button type="button" onclick="togglePassword()" class="absolute right-4 top-4 text-gray-500 hover:text-amber-600 transition-colors" tabindex="-1">
                                     <i id="passwordToggle" class="fas fa-eye"></i>
                                 </button>
@@ -204,9 +251,18 @@
                                     name="password_confirm"
                                     placeholder="Confirmez le mot de passe" 
                                     class="input-modern w-full px-4 py-4 pr-12 rounded-xl focus:outline-none text-gray-800 font-medium"
-                                    required
                                     aria-required="true"
                                 >
+                                <?php if (!empty($errors['password_confirm'])): ?>
+                                    <div class="text-red-500 text-sm mt-1">
+                                        <?= implode('<br>', $errors['password_confirm']) ?>
+                                    </div>
+                                <?php endif; ?>
+                <?php if (!empty($errors['global'])): ?>
+                    <div class="text-red-500 text-sm mt-1 text-center">
+                        <?= implode('<br>', $errors['global']) ?>
+                    </div>
+                <?php endif; ?>
                                 <button type="button" onclick="togglePasswordConfirm()" class="absolute right-4 top-4 text-gray-500 hover:text-amber-600 transition-colors" tabindex="-1">
                                     <i id="passwordConfirmToggle" class="fas fa-eye"></i>
                                 </button>
@@ -215,7 +271,7 @@
                     </div>
                 </div>
 
-                <!-- Bouton de soumission -->
+               
                 <div class="form-section flex justify-center pt-8">
                     <button 
                         type="submit" 
@@ -228,69 +284,19 @@
                     </button>
                 </div>
             </form>
+            <div class="text-center mt-6 text-color-gray-600">
+                <a  href="/login">retour a la page de connexion</a>
+            </div>
         </div>
+        
     </div>
 
    
-    <div id="successModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden backdrop-blur-sm">
-        <div class="bg-white rounded-3xl p-8 max-w-md mx-4 text-center card-container">
-            <div class="relative mb-6">
-                <div class="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mx-auto relative">
-                    <div class="absolute inset-0 rounded-full pulse-ring bg-green-500"></div>
-                    <i class="fas fa-check text-white text-2xl relative z-10"></i>
-                </div>
-            </div>
-            <h3 class="text-2xl font-bold text-gray-800 mb-3">Félicitations !</h3>
-            <p class="text-gray-600 mb-6">Votre compte a été créé avec succès. Vous pouvez maintenant accéder à tous nos services.</p>
-            <a href="/login">
-                <button onclick="closeModal()" class="btn-modern gradient-bg text-white px-8 py-3 rounded-xl font-semibold hover:shadow-lg transition-all duration-300">
-                Continuer
-            </button>
-            </a>
-        </div>
-    </div>
 
  
 </body>
 </body>
-<script>
-// Affichage dynamique du nom de fichier uploadé
-function handleFileUpload(input, labelId) {
-    const label = document.getElementById(labelId.replace('-label', '-filename'));
-    if (input.files && input.files[0]) {
-        label.textContent = input.files[0].name;
-    } else {
-        label.textContent = labelId.includes('recto') ? 'Télécharger recto' : 'Télécharger verso';
-    }
-}
-// Affichage/masquage mot de passe
-function togglePassword() {
-    const pwd = document.getElementById('password');
-    const icon = document.getElementById('passwordToggle');
-    if (pwd.type === 'password') {
-        pwd.type = 'text';
-        icon.classList.remove('fa-eye');
-        icon.classList.add('fa-eye-slash');
-    } else {
-        pwd.type = 'password';
-        icon.classList.remove('fa-eye-slash');
-        icon.classList.add('fa-eye');
-    }
-}
-function togglePasswordConfirm() {
-    const pwd = document.getElementById('password_confirm');
-    const icon = document.getElementById('passwordConfirmToggle');
-    if (pwd.type === 'password') {
-        pwd.type = 'text';
-        icon.classList.remove('fa-eye');
-        icon.classList.add('fa-eye-slash');
-    } else {
-        pwd.type = 'password';
-        icon.classList.remove('fa-eye-slash');
-        icon.classList.add('fa-eye');
-    }
-}
-</script>
+
 </html>
 
  <style>
