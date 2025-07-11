@@ -1,13 +1,10 @@
 <?php
 
-/**
- * Redirige vers une URL en utilisant la BASE_URL du .env
- */
 function redirect($path)
 {
     $baseUrl = getenv('BASE_URL');
     if (!$baseUrl) {
-        $baseUrl = 'http://localhost:8082'; // fallback
+        $baseUrl = 'http://localhost:8082'; 
     }
     $baseUrl = rtrim($baseUrl, '/;');
     $path = ltrim($path, '/');
