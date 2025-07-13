@@ -52,7 +52,7 @@ class Validator {
   
     public static function validatePersonneData($telephone, $num_identite): bool
     {
-        self::reset();
+        // NE PAS reset ici, sinon on efface les autres erreurs !
         if (!self::isValidTelephone($telephone)) {
             self::addError('telephone', self::getErrorMessage('telephone_format'));
         } elseif (!self::isUniqueTelephone($telephone)) {

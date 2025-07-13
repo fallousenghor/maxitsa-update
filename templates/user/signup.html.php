@@ -19,7 +19,7 @@
    
 </head>
 <body class="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 relative overflow-x-hidden">
-    <!-- Decorative elements -->
+  
     <div class="absolute top-0 left-0 w-full h-full pointer-events-none">
         <div class="absolute top-20 left-10 w-32 h-32 bg-amber-200 rounded-full opacity-20 floating-icon"></div>
         <div class="absolute top-40 right-20 w-24 h-24 bg-orange-200 rounded-full opacity-30 floating-icon" style="animation-delay: 1s;"></div>
@@ -29,7 +29,7 @@
 
     
 
-    <!-- Contenu principal -->
+   
     <div class="max-w-4xl mx-auto px-6 pb-12">
         <div class="card-container rounded-3xl p-8 md:p-12 slide-in">
             <form class="space-y-8" method="post" action="/signup" enctype="multipart/form-data">
@@ -41,7 +41,7 @@
                 $session->unset('errors');
                 $session->unset('old');
                 ?>
-                <!-- Section 1: Informations personnelles -->
+               
                 <div class="form-section">
                     <h3 class="text-xl font-semibold text-gray-800 mb-6 flex items-center">
                         <div class="w-8 h-8 gradient-bg rounded-full flex items-center justify-center mr-3">
@@ -141,7 +141,7 @@
                     </div>
                 </div>
 
-                <!-- Section 3: Identification -->
+              
                 <div class="form-section">
                     <h3 class="text-xl font-semibold text-gray-800 mb-6 flex items-center">
                         <div class="w-8 h-8 gradient-bg rounded-full flex items-center justify-center mr-3">

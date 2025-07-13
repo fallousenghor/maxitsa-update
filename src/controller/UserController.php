@@ -2,7 +2,7 @@
 namespace Maxitsa\Controller;
 
 use Maxitsa\Abstract\AbstractController;
-use Maxitsa\Core\FileUploade;
+use Maxitsa\Service\UploadService;
 use Maxitsa\Core\Session;
 use Maxitsa\Core\Validator;
 
@@ -34,8 +34,10 @@ class UserController extends AbstractController
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             extract($_POST, EXTR_SKIP);
-            $photoRectoPath = (isset($_FILES['photo_recto']) && $_FILES['photo_recto']['error'] === UPLOAD_ERR_OK) ? FileUploade::upload($_FILES['photo_recto'], __DIR__ . '/../../../public/images/uploads/') : '';
-            $photoVersoPath = (isset($_FILES['photo_verso']) && $_FILES['photo_verso']['error'] === UPLOAD_ERR_OK) ? FileUploade::upload($_FILES['photo_verso'], __DIR__ . '/../../../public/images/uploads/') : '';
+            $photoRectoPath = (isset($_FILES['photo_recto']) && $_FILES['photo_recto']['error'] === UPLOAD_ERR_OK)
+                ? \Maxitsa\Service\UploadService::upload($_FILES['photo_recto'], __DIR__ . '/../../../public/images/uploads/') : '';
+            $photoVersoPath = (isset($_FILES['photo_verso']) && $_FILES['photo_verso']['error'] === UPLOAD_ERR_OK)
+                ? \Maxitsa\Service\UploadService::upload($_FILES['photo_verso'], __DIR__ . '/../../../public/images/uploads/') : '';
             $data = [
                 'id' => uniqid(),
                 'telephone' => $telephone ?? '',
@@ -51,14 +53,26 @@ class UserController extends AbstractController
             ];
             $old = $data;
             Validator::reset();
-            array_map(function($k,$v){if(Validator::isEmpty($v))Validator::addError($k,Session::getErrorMessage($k));},array_keys(['prenom'=>$data['prenom'],'nom'=>$data['nom'],'telephone'=>$data['telephone'],'adresse'=>$data['adresse'],'num_identite'=>$data['num_identite'],'password'=>$data['password']]),['prenom'=>$data['prenom'],'nom'=>$data['nom'],'telephone'=>$data['telephone'],'adresse'=>$data['adresse'],'num_identite'=>$data['num_identite'],'password'=>$data['password']]);
-            if($data['password']!==$data['password_confirm'])Validator::addError('password_confirm',Session::getErrorMessage('password_confirm'));
-            Validator::validatePersonneData($data['telephone'],$data['num_identite']);
-            $errors=Validator::getErrors();
-            if(empty($errors)&&PersonneService::getInstance()->inscrire($data))redirect('login?signup');
-            if(empty($errors))Validator::addError('global','Erreur lors de l\'inscription.');
-            Session::getInstance()->set('errors',Validator::getErrors());
-            Session::getInstance()->set('old',$old);
+            
+            $requiredFields = [
+                'prenom', 'nom', 'telephone', 'adresse', 'num_identite', 'password', 'password_confirm', 'photo_recto', 'photo_verso'
+            ];
+            foreach ($requiredFields as $field) {
+                if (Validator::isEmpty($data[$field])) {
+                    Validator::addError($field, Session::getErrorMessage($field) ?: 'Ce champ est requis.');
+                }
+            }
+           
+            if ($data['password'] !== $data['password_confirm']) {
+                Validator::addError('password_confirm', Session::getErrorMessage('password_confirm'));
+            }
+           
+            Validator::validatePersonneData($data['telephone'], $data['num_identite']);
+            $errors = Validator::getErrors();
+            if (empty($errors) && PersonneService::getInstance()->inscrire($data)) redirect('login?signup');
+            if (empty($errors)) Validator::addError('global', 'Erreur lors de l\'inscription.');
+            Session::getInstance()->set('errors', Validator::getErrors());
+            Session::getInstance()->set('old', $old);
             redirect('signup');
             exit;
         }
