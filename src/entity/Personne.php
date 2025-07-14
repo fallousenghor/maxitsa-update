@@ -17,7 +17,7 @@ class Personne extends AbstractEntity {
     protected array $compte = [];
     protected string $typePersonne;
 
-    // public function addCompte(Compte $compte): void { }
-    // public function getTypePersonne(): ?TypePersonne {  }
-    // public function setTypePersonne(TypePersonne $type): void { }
+    // protected function addCompte(Compte $compte): void { }
+    // protected function getTypePersonne(): ?TypePersonne {  }
+    // protected function setTypePersonne(TypePersonne $type): void { }
 }

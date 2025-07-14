@@ -18,26 +18,87 @@
                 </div>
                 <h1 class="text-white text-xl font-bold">MAXITSA</h1>
             </div>
-            
             <div class="flex items-center space-x-4">
-               
-                <button class="btn-shine bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-6 py-2 rounded-lg font-medium transition-all duration-300 backdrop-blur-sm">
+                <button id="btn-ajouter-compte" class="btn-shine bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-6 py-2 rounded-lg font-medium transition-all duration-300 backdrop-blur-sm">
                     Ajouter compte
                 </button>
-                <button class="btn-shine bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-6 py-2 rounded-lg font-medium transition-all duration-300 backdrop-blur-sm">
+                <button id="btn-changer-compte" class="btn-shine bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-6 py-2 rounded-lg font-medium transition-all duration-300 backdrop-blur-sm">
                     Changer compte
                 </button>
                 <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center cursor-pointer hover:bg-opacity-30 transition-all duration-300">
                     <i class="fas fa-user text-white text-lg"></i>
                 </div>
-                 <span class="text-white font-bold"> <?php echo htmlspecialchars($user_telephone ?? ''); ?></span>
-                <a href="http://localhost:8082/login">
-                     <button class="btn-shine bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-6 py-2 rounded-lg font-medium transition-all duration-300 backdrop-blur-sm">
-                    Deconnexion
-                </button>
+                <span class="text-white font-bold"> <?php echo htmlspecialchars($user_telephone ?? ''); ?></span>
+                <a href="/logout">
+                    <button class="btn-shine bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-6 py-2 rounded-lg font-medium transition-all duration-300 backdrop-blur-sm">
+                        Déconnexion
+                    </button>
                 </a>
             </div>
         </div>
+    </header>
+
+    <!-- Popup Modal -->
+    <div id="popup-ajouter-compte" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-sm absolute" style="top:70px;left:50%;transform:translateX(-50%);">
+            <button id="close-popup" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-xl">&times;</button>
+            <h2 class="text-xl font-bold mb-4">Ajouter un compte secondaire</h2>
+            <form method="post" action="/add-secondary-account" class="space-y-4">
+                <div>
+                    <label for="telephone" class="block text-gray-700 mb-2">Numéro de téléphone</label>
+                    <input type="text" name="telephone" id="telephone" class="w-full border rounded px-3 py-2" required>
+                </div>
+                <div class="flex justify-end">
+                    <button type="submit" class="bg-orange-500 text-white px-4 py-2 rounded">Ajouter</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Popup Changer Compte -->
+    <div id="popup-changer-compte" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-sm absolute" style="top:70px;left:50%;transform:translateX(-50%);">
+            <button id="close-changer-popup" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-xl">&times;</button>
+            <h2 class="text-xl font-bold mb-4">Changer de compte</h2>
+            <form method="post" action="/changer-compte" class="space-y-4">
+                <div>
+                    <label for="compte_id" class="block text-gray-700 mb-2">Sélectionnez un compte</label>
+                    <select name="compte_id" id="compte_id" class="w-full border rounded px-3 py-2" required>
+                        <?php if (isset($user_comptes) && is_array($user_comptes)):
+                            foreach ($user_comptes as $compte): ?>
+                                <option value="<?= htmlspecialchars($compte['id']) ?>">
+                                    <?= htmlspecialchars($compte['telephone']) ?>
+                                </option>
+                            <?php endforeach;
+                        endif; ?>
+                    </select>
+                </div>
+                <div class="flex justify-end">
+                    <button type="submit" class="bg-orange-500 text-white px-4 py-2 rounded">Changer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const btnAjouterCompte = document.getElementById('btn-ajouter-compte');
+        const popup = document.getElementById('popup-ajouter-compte');
+        const closePopup = document.getElementById('close-popup');
+        btnAjouterCompte.addEventListener('click', () => popup.classList.remove('hidden'));
+        closePopup.addEventListener('click', () => popup.classList.add('hidden'));
+        window.addEventListener('click', (e) => {
+            if (e.target === popup) popup.classList.add('hidden');
+        });
+        // Changer compte popup
+        const btnChangerCompte = document.getElementById('btn-changer-compte');
+        const popupChanger = document.getElementById('popup-changer-compte');
+        const closeChangerPopup = document.getElementById('close-changer-popup');
+        btnChangerCompte.addEventListener('click', () => popupChanger.classList.remove('hidden'));
+        closeChangerPopup.addEventListener('click', () => popupChanger.classList.add('hidden'));
+        window.addEventListener('click', (e) => {
+            if (e.target === popupChanger) popupChanger.classList.add('hidden');
+        });
+    </script>
     </header>
 
     <!-- Main Content -->

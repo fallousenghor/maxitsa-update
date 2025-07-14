@@ -8,6 +8,12 @@
 </head>
 <body class="bg-gray-100 flex items-center justify-center h-screen p-4">
   <div class="text-center">
+    <a href="javascript:history.back()" class="inline-flex items-center text-gray-900 hover:text-orange-500 mb-4">
+      <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+      </svg>
+      Retour
+    </a>
     <h1 class="text-6xl font-bold text-gray-900 mb-4">404</h1>
     <p class="text-xl text-gray-800 mb-2">Oups ! Page non trouvée</p>
     <p class="text-gray-600 mb-6">La page que vous recherchez n'existe pas ou a été déplacée.</p>

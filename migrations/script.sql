@@ -1,7 +1,5 @@
--
-
 CREATE TABLE personne (
-    id VARCHAR(36) PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     telephone VARCHAR(20) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     num_identite VARCHAR(50) NOT NULL UNIQUE,
@@ -14,19 +12,19 @@ CREATE TABLE personne (
 );
 
 CREATE TABLE compte (
-    id VARCHAR(36) PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     telephone VARCHAR(20) NOT NULL,
     solde NUMERIC(15,2) NOT NULL DEFAULT 0,
-    personne_id VARCHAR(36) NOT NULL,
+    personne_id UUID NOT NULL,
     type_compte VARCHAR(20) NOT NULL,
-    FOREIGN KEY (personne_id) REFERENCES personne(id)
+    FOREIGN KEY (personne_id) REFERENCES personne(id) ON DELETE CASCADE
 );
 
 CREATE TABLE transaction (
-    id VARCHAR(36) PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     montant NUMERIC(15,2) NOT NULL,
-    compte_id VARCHAR(36) NOT NULL,
+    compte_id UUID NOT NULL,
     type VARCHAR(20) NOT NULL,
     date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (compte_id) REFERENCES compte(id)
+    FOREIGN KEY (compte_id) REFERENCES compte(id) ON DELETE CASCADE
 );

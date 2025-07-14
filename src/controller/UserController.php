@@ -2,6 +2,7 @@
 namespace Maxitsa\Controller;
 
 use Maxitsa\Abstract\AbstractController;
+use Maxitsa\Service\CompteService;
 use Maxitsa\Service\UploadService;
 use Maxitsa\Core\Session;
 use Maxitsa\Core\Validator;
@@ -30,14 +31,66 @@ class UserController extends AbstractController
         }
         require __DIR__ . "/../../templates/user/login.html.php";
     }
+
+  
+    public function addSecondaryAccount()
+    {
+        $session = Session::getInstance();
+        $errors = [];
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $telephone = $_POST['telephone'] ?? '';
+            Validator::reset();
+            if (Validator::isEmpty($telephone)) {
+                Validator::addError('telephone', Session::getErrorMessage('telephone'));
+            } elseif (!Validator::isValidTelephone($telephone)) {
+                Validator::addError('telephone', Session::getErrorMessage('telephone_format'));
+            } elseif (!Validator::isUniqueTelephone($telephone)) {
+                Validator::addError('telephone', 'Ce numéro est déjà associé à un compte');
+            }
+            $errors = Validator::getErrors();
+            if (empty($errors)) {
+               
+                $user = $session->get('user');
+                if ($user) {
+                    $data = [
+                        'id' => uniqid(),
+                        'telephone' => $telephone,
+                        'solde' => 0,
+                        'personne' => $user['id'], 
+                        'personne_id' => $user['id'],
+                        'type_compte' => 'secondaire'
+                    ];
+                    try {
+                        $success = CompteService::getInstance()->creerCompte($data);
+                        if ($success) {
+                            redirect('accueil');
+                        } else {
+                            Validator::addError('global', 'Erreur lors de la création du compte secondaire.');
+                        }
+                    } catch (\PDOException $e) {
+                        if ($e->getCode() === '23505') {
+                            Validator::addError('telephone', 'Ce numéro est déjà associé à un compte');
+                        } else {
+                            Validator::addError('global', 'Erreur lors de la création du compte secondaire.');
+                        }
+                    }
+                } else {
+                    Validator::addError('global', 'Utilisateur non connecté.');
+                }
+            }
+            $session->set('errors', $errors);
+            $session->set('old', ['telephone' => $telephone]);
+            redirect('accueil');
+        }
+    }
     public function signup()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             extract($_POST, EXTR_SKIP);
             $photoRectoPath = (isset($_FILES['photo_recto']) && $_FILES['photo_recto']['error'] === UPLOAD_ERR_OK)
-                ? \Maxitsa\Service\UploadService::upload($_FILES['photo_recto'], __DIR__ . '/../../../public/images/uploads/') : '';
+                ? UploadService::upload($_FILES['photo_recto'], __DIR__ . '/../../../public/images/uploads/') : '';
             $photoVersoPath = (isset($_FILES['photo_verso']) && $_FILES['photo_verso']['error'] === UPLOAD_ERR_OK)
-                ? \Maxitsa\Service\UploadService::upload($_FILES['photo_verso'], __DIR__ . '/../../../public/images/uploads/') : '';
+                ? UploadService::upload($_FILES['photo_verso'], __DIR__ . '/../../../public/images/uploads/') : '';
             $data = [
                 'id' => uniqid(),
                 'telephone' => $telephone ?? '',
@@ -53,7 +106,6 @@ class UserController extends AbstractController
             ];
             $old = $data;
             Validator::reset();
-            
             $requiredFields = [
                 'prenom', 'nom', 'telephone', 'adresse', 'num_identite', 'password', 'password_confirm', 'photo_recto', 'photo_verso'
             ];
@@ -62,15 +114,26 @@ class UserController extends AbstractController
                     Validator::addError($field, Session::getErrorMessage($field) ?: 'Ce champ est requis.');
                 }
             }
-           
             if ($data['password'] !== $data['password_confirm']) {
                 Validator::addError('password_confirm', Session::getErrorMessage('password_confirm'));
             }
-           
             Validator::validatePersonneData($data['telephone'], $data['num_identite']);
             $errors = Validator::getErrors();
-            if (empty($errors) && PersonneService::getInstance()->inscrire($data)) redirect('login?signup');
-            if (empty($errors)) Validator::addError('global', 'Erreur lors de l\'inscription.');
+            if (empty($errors)) {
+                try {
+                    if (PersonneService::getInstance()->inscrire($data)) {
+                        redirect('login?signup');
+                    } else {
+                        Validator::addError('global', 'Erreur lors de l\'inscription.');
+                    }
+                } catch (\PDOException $e) {
+                    if ($e->getCode() === '23505') {
+                        Validator::addError('telephone', 'Ce numéro est déjà associé à un compte');
+                    } else {
+                        Validator::addError('global', 'Erreur lors de l\'inscription.');
+                    }
+                }
+            }
             Session::getInstance()->set('errors', Validator::getErrors());
             Session::getInstance()->set('old', $old);
             redirect('signup');
@@ -118,7 +181,17 @@ class UserController extends AbstractController
     }
 
 
-  public function create(){}
+
+   
+    public function logout()
+    {
+        $session = Session::getInstance();
+        $session->destroy();
+        redirect('login');
+        exit;
+    }
+
+    public function create(){}
 
   
 }
